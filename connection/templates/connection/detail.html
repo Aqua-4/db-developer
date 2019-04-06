@@ -1,0 +1,68 @@
+{% extends 'connection/base.html' %}
+{% load staticfiles %}
+{%block title%}Connection Details{%endblock%}
+{%block connection_update_link%}
+
+
+<li class="nav-item">
+    <a class="nav-link" href="/connection/update/{{connection.id}}">
+        <span class="badge badge-warning">
+            Update {{connection.db_name}}
+        </span>
+    </a>
+</li>
+{%endblock%}
+{% block body %}
+
+<div class="container row d-flex flex-row p-2 ml-2 mt-1">
+    <h3><span class="badge badge-primary p-2 ">{{connection.db_name}}-DB</span></h3>
+    <h3><span class="badge badge-secondary p-2 ">{{connection.conn_type}}</span></h3>
+</div>
+
+<div class="alert alert-danger alert-dismissible fade show" role="alert" style="display:none">
+    <strong>Invalid Query!</strong>
+    Please Check Your Query...
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div id="table_placeholder"> </div>
+
+<textarea id="query_ip" class="w-50" rows="4" cols="50" placeholder="Enter Query here">
+</textarea>
+
+
+<input id="submit_btn" type="submit" value="Submit">
+<textarea id="query_op" rows="4" cols="50" readonly>
+</textarea>
+<!-- type="text/x-lodash-template" -->
+
+
+<script id="table_template" type="text/x-lodash-template">
+    <table class="table table-sm table-bordered table-hover table-dark">
+        <caption id="table_caption" class="badge-pill w-50 badge-info" style="caption-side: top;"></caption>
+
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <% _.each(columns,function(col){ %>
+                    <th scope="col"><%=col%></th>
+                <% }) %>
+            </tr>
+        </thead>
+        <tbody>
+            <% _.each(data,function(item,idx){ %>
+                <tr>
+                    <th scope="row"><%=idx+1%></th>
+                    <% _.each(columns,function(col){ %>
+                        <td><%=item[col]%></td>
+                    <% }) %>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</script>
+
+
+<script src="{% static 'connection/detail.js' %}"></script>
+{% endblock %}

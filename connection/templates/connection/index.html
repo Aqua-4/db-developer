@@ -1,0 +1,36 @@
+{% extends 'connection/base.html' %}
+
+{% block body %}
+
+{% if all_dbs %}
+<h1><span class="badge badge-info">All Connections</span></h1>
+
+<ul class="list-group">
+  {% for db in all_dbs %}
+  <li class="list-group-item list-group-item-dark d-flex justify-content-between align-items-center">
+
+    <a class="list-group-item list-group-item-action list-group-item-primary"
+      href="{% url 'connection:detail' db.id  %}">
+      {{db.db_name}}
+    </a>
+    <a class="list-group-item list-group-item-action list-group-item-warning"
+      href="{% url 'connection:update' db.id %}">
+      Edit
+    </a>
+    <form
+      action="{% url 'connection:delete' db.id %}" method="POST"
+      onsubmit="return confirm('Are you sure you want to delete connection?');">
+      {% csrf_token %}
+      <input type="hidden" name="db_id" value="{{db.id}}" />
+      <button class="badge badge-danger">Delete X</button>
+    </form>
+
+  </li>
+  {% endfor %}
+</ul>
+{%else%}
+<h3>No Connections present</h3>
+{%endif%}
+
+
+{% endblock %}

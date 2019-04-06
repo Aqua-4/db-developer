@@ -1,0 +1,23 @@
+/* body{
+    background: wheat
+} */
+
+.loading-icon{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+}
+
+#table_placeholder{
+    overflow-y: auto;
+    max-height: 26rem;
+}
+/* #table_placeholder thead
+{
+    position: fixed;
+}
+#table_placeholder tbody
+{
+    margin-top: 10rem
+} */
