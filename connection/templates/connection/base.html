@@ -19,6 +19,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
 <script src="{% static 'connection/controller.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -32,8 +33,8 @@
             <ul class="navbar-nav mr-auto">
                 {%block connection_update_link%}{%endblock%}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Dropdown
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -48,11 +49,13 @@
                 </li>
             </ul>
 
-            <a class="nav-link" href="{% url 'connection:create' %}" aria-disabled="true">
-                <span class="fa fa-plus">
-                    Add Connection
-                </span>
-            </a>
+            <button type="button" class="btn btn-outline-light mr-2">
+                <a  href="{% url 'connection:create' %}" aria-disabled="true">
+                    <span class="badge badge-success p-2">
+                       + Add Connection
+                    </span>
+                </a>
+            </button>
 
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
