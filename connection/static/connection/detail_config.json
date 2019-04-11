@@ -1,5 +1,12 @@
 {
-    "mysql": {
+    "mysql+pymysql": {
+        "tables": "show tables;",
+        "table_ops": {
+            "count": "select count(*) from $var$;",
+            "rows": "select * from $var$ limit 0,100;"
+        }
+    },
+    "oracle": {
         "tables": "show tables;",
         "table_ops": {
             "count": "select count(*) from $var$;",

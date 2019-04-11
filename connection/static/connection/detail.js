@@ -4,8 +4,8 @@ var connection_conifg = ajax_call("/static/connection/detail_config.json", false
 const var_str = "$var$"
 
 $(document).ready(function () {
-  make_query(connection_conifg.mysql.tables)
-  // $("#query_ip").attr("placeholder", connection_conifg.mysql.tables)
+  connection_conifg = connection_conifg[connection_type]
+  make_query(connection_conifg.tables)
 })
 
 $('body')
@@ -19,7 +19,7 @@ $('body')
   })
   .on('click', '#submit_btn', function () {
     if ($("#query_ip").val() != "")
-      make_query()
+      make_query($("#query_ip").val())
   })
   .on('keydown', '#query_ip', function (e) {
     if (e.ctrlKey && e.keyCode == 13) {
@@ -30,7 +30,6 @@ $('body')
 
 
 function make_query(query) {
-  // var query = $("#query_ip").val() || connection_conifg.mysql.tables
   loading("#table_placeholder")
   ajax_call("query?query=" + query).done(function (data) {
     if (typeof (data.data) == "string") {
@@ -49,7 +48,7 @@ function bs_table(data, query) {
   var commentTemplate = document.getElementById("table_template").innerHTML;
   //create template function
   var templateFn = _.template(commentTemplate);
-  var templateHTML = templateFn({ 'data': data, 'columns': _.keys(data[0]) });
+  var templateHTML = templateFn({ 'data': data, 'columns': _.keys(data[0]), 'tables': (query == connection_conifg.tables) });
   $("#table_placeholder").html(templateHTML)
   $('#table_caption').text(query)
 
@@ -57,7 +56,7 @@ function bs_table(data, query) {
 
 
 function html_tip(table_name, header = "Table ops") {
-  var ops = connection_conifg.mysql.table_ops
+  var ops = connection_conifg.table_ops
   var op = "<div class='bg-color tip border-radius text-dark pr-3'>"
   op += "<p class='h4 mb-0 py-2 text-uppercase text-center border border-white border-top-0 border-left-0 border-right-0 border-bottom' >"
   op += "<span class='d-block sm3'>" + header + "</span> </p >"

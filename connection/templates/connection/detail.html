@@ -55,7 +55,7 @@
                 <tr>
                     <th scope="row"><%=idx+1%></th>
                     <% _.each(columns,function(col){ %>
-                        <% if(location.hash=='#tables'){ %>
+                        <% if(tables){ %>
                             <td data-toggle="tooltip" data-html="true" title="<%print(html_tip(item[col]))%>" ><%=item[col]%></td>
                         <% }else{ %>
                             <td><%=item[col]%></td>
@@ -69,4 +69,7 @@
 
 
 <script src="{% static 'connection/detail.js' %}"></script>
+<script>
+    var connection_type = `{{connection.conn_type}}`
+</script>
 {% endblock %}

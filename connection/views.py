@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import json
 import sqlalchemy
 import pandas as pd
+import cx_Oracle
 from functools import lru_cache
 
 
@@ -37,8 +38,8 @@ class ConnectionDelete(DeleteView):
     model = Connection
     success_url = reverse_lazy('connection:index')
 
+
 class DBQuery(APIView):
-    context_object_name = "lol"
 
     @lru_cache(maxsize=32)
     def get(self, request, pk):
@@ -61,7 +62,8 @@ class DBQuery(APIView):
         database connection for every engine object, and not dispose it. So we
         re-use the engine objects within this module."""
         # "mysql://scott:tiger@localhost/test",
-
+        # "dsn_tns = cx_Oracle.makedsn('localhost', '1521', 'xe')\n",
+        # "conn = cx_Oracle.connect(user='HRMS_USER', password='gramener', dsn=dsn_tns)\n",
         if not db_obj['passwd']:
             url_str = "{}://{}@{}/{}".format(
                 db_obj['conn_type'], db_obj['usr_name'],
