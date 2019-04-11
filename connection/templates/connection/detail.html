@@ -55,7 +55,11 @@
                 <tr>
                     <th scope="row"><%=idx+1%></th>
                     <% _.each(columns,function(col){ %>
-                        <td><%=item[col]%></td>
+                        <% if(location.hash=='#tables'){ %>
+                            <td data-toggle="tooltip" data-html="true" title="<%print(html_tip(item[col]))%>" ><%=item[col]%></td>
+                        <% }else{ %>
+                            <td><%=item[col]%></td>
+                        <% } %>
                     <% }) %>
                 </tr>
             <% }) %>

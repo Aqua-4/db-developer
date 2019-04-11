@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import json
 import sqlalchemy
 import pandas as pd
+from functools import lru_cache
 
 
 class IndexView(generic.ListView):
@@ -36,10 +37,10 @@ class ConnectionDelete(DeleteView):
     model = Connection
     success_url = reverse_lazy('connection:index')
 
-
 class DBQuery(APIView):
     context_object_name = "lol"
 
+    @lru_cache(maxsize=32)
     def get(self, request, pk):
         query_str = request.GET.get('query')
         db_obj = Connection.objects.filter(pk=pk).values()[0]

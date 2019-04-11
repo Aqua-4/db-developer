@@ -1,30 +1,25 @@
 /**Detail-view */
 
-$(document).ready(function () {
-  loading("#table_placeholder")
-  ajax_call("query?query=show tables").done(function (data) {
-    $("#query_op").val(JSON.stringify(data.data))
-    bs_table(data.data)
+var connection_conifg = ajax_call("/static/connection/detail_config.json", false).done().responseJSON
+const var_str = "$var$"
 
-  })
+$(document).ready(function () {
+  make_query(connection_conifg.mysql.tables)
+  // $("#query_ip").attr("placeholder", connection_conifg.mysql.tables)
 })
 
-
-
 $('body')
+  .tooltip({
+    selector: '[data-toggle="tooltip"]',
+    container: 'body',
+    animation: true,
+    html: true,
+    trigger: 'click',
+    placement: 'auto'
+  })
   .on('click', '#submit_btn', function () {
-    loading("#table_placeholder")
-    var query = $("#query_ip").val()
-    ajax_call("query?query=" + query).done(function (data) {
-      if (typeof (data.data) == "string") {
-        data.data = $.parseJSON(data.data)
-      }
-      $("#query_op").val(JSON.stringify(data.data))
-      bs_table(data.data,query)
-
-    }).fail(function () {
-      $('.alert').show()
-    })
+    if ($("#query_ip").val() != "")
+      make_query()
   })
   .on('keydown', '#query_ip', function (e) {
     if (e.ctrlKey && e.keyCode == 13) {
@@ -34,7 +29,22 @@ $('body')
   });
 
 
-function bs_table(data,query="Show Tables") {
+function make_query(query) {
+  // var query = $("#query_ip").val() || connection_conifg.mysql.tables
+  loading("#table_placeholder")
+  ajax_call("query?query=" + query).done(function (data) {
+    if (typeof (data.data) == "string") {
+      data.data = $.parseJSON(data.data)
+    }
+    $("#query_op").val(JSON.stringify(data.data))
+    bs_table(data.data, query)
+
+  }).fail(function () {
+    $('.alert').show()
+  })
+}
+
+function bs_table(data, query) {
   $('.alert').hide()
   var commentTemplate = document.getElementById("table_template").innerHTML;
   //create template function
@@ -42,5 +52,21 @@ function bs_table(data,query="Show Tables") {
   var templateHTML = templateFn({ 'data': data, 'columns': _.keys(data[0]) });
   $("#table_placeholder").html(templateHTML)
   $('#table_caption').text(query)
+
+}
+
+
+function html_tip(table_name, header = "Table ops") {
+  var ops = connection_conifg.mysql.table_ops
+  var op = "<div class='bg-color tip border-radius text-dark pr-3'>"
+  op += "<p class='h4 mb-0 py-2 text-uppercase text-center border border-white border-top-0 border-left-0 border-right-0 border-bottom' >"
+  op += "<span class='d-block sm3'>" + header + "</span> </p >"
+  op += " <ul class='list-unstyled h3 pt-2 pb-4 pl-3 mb-0 text-left'> "
+  _.each(ops, function (v, k) {
+    op += "<button class='btn btn-outline-info query-table' query='" + v.replace(var_str, table_name) + "'>  " + k + "</button >"
+  })
+  op += "</ul>"
+  op += "</div>"
+  return op
 
 }
