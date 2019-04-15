@@ -43,7 +43,11 @@ function make_query(query) {
     .done(function (data) {
 
       if (typeof (data.data) == "string") {
-        data.data = $.parseJSON(data.data)
+        try {
+          data.data = $.parseJSON(data.data)
+        } catch (error) {
+          $('.alert').show()
+        }
       }
       bs_table(data.data, query)
 
