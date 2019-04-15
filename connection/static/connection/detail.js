@@ -9,6 +9,7 @@ $(document).ready(function () {
 })
 
 $('body')
+  // query-table
   .tooltip({
     selector: '[data-toggle="tooltip"]',
     container: 'body',
@@ -17,7 +18,12 @@ $('body')
     trigger: 'click',
     placement: 'auto'
   })
+  .on('click', 'button.query-table', function () {
+    $('[data-toggle="tooltip"]').tooltip('hide')
+    make_query($(this).attr('query'))
+  })
   .on('click', '#submit_btn', function () {
+    console.log($("#query_ip").val() != "");
     if ($("#query_ip").val() != "")
       make_query($("#query_ip").val())
   })
@@ -31,16 +37,25 @@ $('body')
 
 function make_query(query) {
   loading("#table_placeholder")
-  ajax_call("query?query=" + query).done(function (data) {
-    if (typeof (data.data) == "string") {
-      data.data = $.parseJSON(data.data)
-    }
-    $("#query_op").val(JSON.stringify(data.data))
-    bs_table(data.data, query)
+  console.log("query?query=" + query);
 
-  }).fail(function () {
-    $('.alert').show()
-  })
+  ajax_call("query?query=" + query)
+    .done(function (data) {
+
+      if (typeof (data.data) == "string") {
+        data.data = $.parseJSON(data.data)
+      }
+      bs_table(data.data, query)
+
+    })
+    .fail(function () {
+      $('.alert').show()
+    })
+    .always(function (data) {
+      console.log(typeof (data.data), data);
+
+      $("#query_op").val(JSON.stringify(data))
+    })
 }
 
 function bs_table(data, query) {

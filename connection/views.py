@@ -41,7 +41,7 @@ class ConnectionDelete(DeleteView):
 
 class DBQuery(APIView):
 
-    @lru_cache(maxsize=32)
+    @lru_cache()
     def get(self, request, pk):
         query_str = request.GET.get('query')
         db_obj = Connection.objects.filter(pk=pk).values()[0]

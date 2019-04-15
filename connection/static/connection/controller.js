@@ -2,11 +2,11 @@
 
 function ajax_call(url, async = true) {
   // use get_ajax_call.done(function(data){  <code> })
-  return $.getJSON({
+  return $.ajax({
     url: url,
     async: async,
     method: 'GET',
-    dataType: 'json'
+    // dataType: 'json'
   })
 }
 
