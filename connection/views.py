@@ -46,20 +46,24 @@ class DBQuery(APIView):
     @lru_cache()
     def get(self, request, pk):
         query_str = request.GET.get('query')
-        db_obj = Connection.objects.filter(pk=pk).values()[0]
-        if 'connection' not in self.CACHE:
+        if 'connection' not in self.CACHE or self.CACHE['pk'] != pk:
+            db_obj = Connection.objects.filter(pk=pk).values()[0]
             self.CACHE['connection'] = self.create_connection(db_obj)
-        elif self.CACHE['pk'] != pk:
-            self.CACHE['connection'] = self.create_connection(db_obj)
+        # elif self.CACHE['pk'] != pk:
+        #     self.CACHE['connection'] = self.create_connection(db_obj)
         self.CACHE['pk'] = pk
-        # conn = self.create_connection(db_obj)
-        df = pd.read_sql_query("{}".format(query_str), self.CACHE['connection'])
+
+        if 'query' not in self.CACHE or self.CACHE['query'] != query_str:
+            self.CACHE['response'] = pd.read_sql_query("{}".format(query_str),
+                                                    self.CACHE['connection'])
+        
         # db_obj does not work
-        print(df, df.to_dict(orient='records'))
+        self.CACHE['query'] = query_str
+        # print(self.CACHE['response'])
         try:
-            return JsonResponse({'data': df.to_dict(orient='records')})
+            return JsonResponse({'data': self.CACHE['response'].to_dict(orient='records')})
         except:
-            return JsonResponse({'data': '{}'.format(df.to_dict(orient='records'))})
+            return JsonResponse({'data': '{}'.format(self.CACHE['response'].to_json(orient='records'))})
 
     def create_connection(self, db_obj):
         """Cached version of sqlalchemy.create_engine.
