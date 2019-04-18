@@ -6,7 +6,7 @@ from django.forms import PasswordInput
 
 class Connection(models.Model):
     # usr_name,passwd,server_addr,conn_type,db_name
-    CONNECTION_TYPES = [('mysql+pymysql', 'mySQL'), ('oracle', 'Oracle')]
+    CONNECTION_TYPES = [('mysql+pymysql', 'mySQL'), ('oracle', 'Oracle'),('mssql+pymssql','msSQL')]
 
     usr_name = models.CharField(max_length=250)
     passwd = models.CharField(
