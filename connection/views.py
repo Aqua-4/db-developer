@@ -46,23 +46,23 @@ class DBQuery(APIView):
     @lru_cache()
     def get(self, request, pk):
         query_str = request.GET.get('query')
-        if 'connection' not in self.CACHE or self.CACHE['pk'] != pk:
+        # if 'connection' not in self.CACHE or self.CACHE['pk'] != pk:
+        if self.CACHE.get('pk') != pk:
             db_obj = Connection.objects.filter(pk=pk).values()[0]
             self.CACHE['connection'] = self.create_connection(db_obj)
         # elif self.CACHE['pk'] != pk:
         #     self.CACHE['connection'] = self.create_connection(db_obj)
-        self.CACHE['pk'] = pk
 
-        if 'query' not in self.CACHE or self.CACHE['query'] != query_str:
+        if self.CACHE.get('query') != query_str or self.CACHE['pk'] != pk:
             self.CACHE['response'] = pd.read_sql_query("{}".format(query_str),
-                                                    self.CACHE['connection'])
-        
-        # db_obj does not work
+                                                       self.CACHE['connection']).fillna('NaN')
         self.CACHE['query'] = query_str
-        # print(self.CACHE['response'])
+        self.CACHE['pk'] = pk
         try:
             return JsonResponse({'data': self.CACHE['response'].to_dict(orient='records')})
-        except:
+        except Exception as e:
+            print(e)
+            # this line handles the total row count
             return JsonResponse({'data': '{}'.format(self.CACHE['response'].to_json(orient='records'))})
 
     def create_connection(self, db_obj):

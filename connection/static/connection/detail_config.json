@@ -3,14 +3,16 @@
         "tables": "show tables;",
         "table_ops": {
             "count": "select count(*) from $var$;",
-            "rows": "select * from $var$ limit 0,100;"
+            "rows": "select * from $var$ limit 0,100;",
+            "desc": "desc $var$;"
         }
     },
     "mssql+pymssql": {
         "tables": "select name from sys.tables",
         "table_ops": {
             "count": "select count(*) from $var$;",
-            "rows": "select top 100 * from $var$;"
+            "rows": "select top 100 * from $var$;",
+            "desc": "sp_columns $var$;"
         }
     },
     "oracle": {
